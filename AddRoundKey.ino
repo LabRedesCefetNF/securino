@@ -1,3 +1,3 @@
-String Securino::AddRoudKey(String state){
+String AddRoudKey(String state){
   return state;
 }
