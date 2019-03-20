@@ -1,5 +1,4 @@
-void AddRoudKey(char *state[]){
-  char r[16];
-  r = state;
+byte AddRoudKey(byte state[]){
   
+  return state[1];
 }

@@ -1,3 +1,5 @@
+byte *state[16];
+byte *key[16];
 /*
   Blink
   Turns on an LED on for one second, then off for one second, repeatedly.
@@ -17,5 +19,6 @@ void setup() {
 
 // the loop routine runs over and over again forever:
 void loop() {
-  String saida = enc("data","senha");    // wait for a second
+ //String saida = enc("data","senha");    // wait for a second
+ 
 }
