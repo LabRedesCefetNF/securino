@@ -1,3 +1,5 @@
-String AddRoudKey(String state){
-  return state;
+void AddRoudKey(char *state[]){
+  char r[16];
+  r = state;
+  
 }
