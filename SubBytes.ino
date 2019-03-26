@@ -1,3 +1,4 @@
-String SubBytes(String state){
-  return state;
+byte* SubBytes(byte state[]){
+  setEstado(rotaciona(state));
+  return getEstado();
 }

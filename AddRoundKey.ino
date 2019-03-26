@@ -1,4 +1,4 @@
-byte AddRoudKey(byte state[]){
-  
-  return state[1];
+byte* AddRoundKey(byte state[], byte roundkey[]){
+  setEstado(rotaciona(state));
+  return getEstado();
 }
