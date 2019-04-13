@@ -38,3 +38,13 @@ void SubBytes(byte *state){
         }
     }
 }
+
+byte SubBytesKey(byte chave[]){
+  int linha, coluna;
+  coluna = 0;
+        for (linha = 0; linha < 4; linha++) {
+            chave[linha] = retorna_sbox(chave[linha]);
+        }
+
+        return chave;
+}
