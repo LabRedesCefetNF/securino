@@ -55,25 +55,37 @@ delay(60000);
 //F5  6C  6 FE
 void MixColumns(byte matrizEntrada[][4])
 {
+   byte aux[4][4];
    byte matrizGalois[4][4] = { 
                               {0x02, 0x03, 0x01, 0x01},
                               {0x01, 0x02, 0x03, 0x01},
                               {0x01, 0x01, 0x02, 0x03},
                               {0x03, 0x01, 0x01, 0x02} 
                             };
+
+  for(int i=0; i < 4; i++)
+  {
+    for(int j=0; j < 4; j++)
+    {
+      aux[i][j]=matrizEntrada[i][j]; 
+    }
+  }
+
+
+  delay(5000);
   for (int i=0; i < 4; i++)
   {
-    matrizEntrada[0][i] = E(L(matrizEntrada[0][i]) + L(matrizGalois[0][0])) ^ E(L(matrizEntrada[1][i]) + L(matrizGalois[0][1])) ^ (matrizEntrada[2][i]) ^ (matrizEntrada[3][i]); //ok
-   // matrizEntrada[1][i] = (matrizEntrada[0][i]) ^ E(L(matrizEntrada[1][i]) + L(matrizGalois[1][1])) ^ E(L(matrizEntrada[2][i]) + L(matrizEntrada[1][2])) ^ (matrizEntrada[3][i]);
-    //matrizEntrada[2][i] = 
-    //matrizEntrada[3][i] = 
+    matrizEntrada[0][i] = E(L(aux[0][i])+L(matrizGalois[0][0])) ^ E(L(aux[1][i])+L(matrizGalois[0][1])) ^ aux[2][i] ^ aux[3][i];
+    matrizEntrada[1][i] = aux[0][i] ^ E(L(aux[1][i])+L(matrizGalois[1][1])) ^ E(L(aux[2][i])+L(matrizGalois[1][2])) ^ aux[3][i];
+    matrizEntrada[2][i] = aux[0][i] ^ aux[1][i] ^ E(L(aux[2][i])+L(matrizGalois[2][2])) ^ E(L(aux[3][i])+L(matrizGalois[2][3]));
+    matrizEntrada[3][i] = E(L(aux[0][i])+L(matrizGalois[3][0])) ^ aux[1][i] ^ aux[2][i] ^ E(L(aux[3][i])+L(matrizGalois[3][3]));
   }
 }
 
 byte L(byte valor)
 {
-   byte linha;
-   byte coluna;
+   byte linha = 0x0;
+   byte coluna = 0x0;
 
    linha = valor/0x10;
    coluna = valor - (linha*0x10);
@@ -83,8 +95,8 @@ byte L(byte valor)
 
 byte E(byte valor)
 {
-   byte linha;
-   byte coluna;
+   byte linha = 0x0;
+   byte coluna = 0x0;
 
    linha = (valor/0x10);
    coluna = valor - (linha*0x10);
@@ -93,7 +105,7 @@ byte E(byte valor)
 
 byte tableE(byte linha, byte coluna)
 {
-  byte tabelaE[16][16] = {
+  byte tabelaE[0x10][0x10] = {
   {0x01, 0x03, 0x05, 0x0F, 0x11, 0x33, 0x55, 0xFF, 0x1A, 0x2E, 0x72, 0x96, 0xA1, 0xF8, 0x13, 0x35},
   {0x5F, 0xE1, 0x38, 0x48, 0xD8, 0x73, 0x95, 0xA4, 0xF7, 0x02, 0x06, 0x0A, 0x1E, 0x22, 0x66, 0xAA},
   {0xE5, 0x34, 0x5C, 0xE4, 0x37, 0x59, 0xEB, 0x26, 0x6A, 0xBE, 0xD9, 0x70, 0x90, 0xAB, 0xE6, 0x31},
@@ -116,7 +128,7 @@ byte tableE(byte linha, byte coluna)
 
 byte tableL(byte linha, byte coluna)
 {
-  byte tabelaL[16][16] = {
+  byte tabelaL[0x10][0x10] = {
   {NULL, 0x00, 0x19, 0x01, 0x32, 0x02, 0x1A, 0xC6, 0x4B, 0xC7, 0x1B, 0x68, 0x33, 0xEE, 0xDF, 0x03},
   {0x64, 0x04, 0xE0, 0x0E, 0x34, 0x8D, 0x81, 0xEF, 0x4C, 0x71, 0x08, 0xC8, 0xF8, 0x69, 0x1C, 0xC1},
   {0x7D, 0xC2, 0x1D, 0xB5, 0xF9, 0xB9, 0x27, 0x6A, 0x4D, 0xE4, 0xA6, 0x72, 0x9A, 0xC9, 0x09, 0x78},
