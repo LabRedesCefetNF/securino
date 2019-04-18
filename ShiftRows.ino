@@ -1,44 +1,44 @@
-byte ShiftRows(byte state[]){
+byte ShiftRows(byte state[][4]){
   //setEstado(rotaciona(state));
 
 //rotaciona segunda linha da Matriz
-   byte aux = state[4];
-  state[4]=state[5];
-  state[5]=state[6];
-  state[6]=state[7];
-  state[7]=state[4];
+   byte aux = state[1][0];
+  state[1][0]=state[1][1];
+  state[1][1]=state[1][2];
+  state[1][2]=state[1][3];
+  state[1][3]=aux;
 
 //rotaciona terceira linha da Matriz
-  aux = state[8];
-  state[8]=state[9];
-  state[9]=state[10];
-  state[10]=state[11];
-  state[7]=state[8];
+  aux = state[2][0];
+  state[2][0]=state[2][1];
+  state[2][1]=state[2][2];
+  state[2][2]=state[2][3];
+  state[2][3]=aux;
 
-   aux = state[8];
-  state[8]=state[9];
-  state[9]=state[10];
-  state[10]=state[11];
-  state[7]=state[8];
+  aux = state[2][0];
+  state[2][0]=state[2][1];
+  state[2][1]=state[2][2];
+  state[2][2]=state[2][3];
+  state[2][3]=aux;
 
 //rotaciona quarta linha da Matriz
-   aux = state[12];
-  state[13]=state[14];
-  state[14]=state[15];
-  state[15]=state[16];
-  state[16]=state[12];
-
-   aux = state[12];
-  state[13]=state[14];
-  state[14]=state[15];
-  state[15]=state[16];
-  state[16]=state[12];
-
-   aux = state[12];
-  state[13]=state[14];
-  state[14]=state[15];
-  state[15]=state[16];
-  state[16]=state[12];
+  aux = state[3][0];
+  state[3][0]=state[3][1];
+  state[3][1]=state[3][2];
+  state[3][2]=state[3][3];
+  state[3][3]=aux;
+  
+  aux = state[3][0];
+  state[3][0]=state[3][1];
+  state[3][1]=state[3][2];
+  state[3][2]=state[3][3];
+  state[3][3]=aux;
+  
+  aux = state[3][0];
+  state[3][0]=state[3][1];
+  state[3][1]=state[3][2];
+  state[3][2]=state[3][3];
+  state[3][3]=aux;
   
   //return getEstado();
   return state;
