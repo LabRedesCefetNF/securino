@@ -40,7 +40,6 @@ void ShiftRows(byte state[][4]){
   state[3][3]=aux;
   
   //return getEstado();
-  return state;
 }
 
 void invShiftRows(byte state [][4]){
