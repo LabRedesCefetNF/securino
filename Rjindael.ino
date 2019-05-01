@@ -32,7 +32,7 @@ void enc(byte plainText[][4], byte chave[][4])
   imprime(plainText);
   
   ShiftRows(plainText);
-  Serial.println("Last ShitfRows: ");
+  Serial.println("Last ShiftRows: ");
   imprime(plainText);
   
   KeySchedule(chave);
