@@ -1,4 +1,4 @@
-byte tempteste[16];
+/*byte tempteste[16];
 
 void exibeVetor(String txt, byte x[]){
       Serial.print(txt);
@@ -38,4 +38,4 @@ void espacovazio(){
     Serial.println();
     Serial.println();
     Serial.println();
-}
+}*/

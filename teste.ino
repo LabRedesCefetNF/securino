@@ -1,4 +1,4 @@
-byte matrizTeste[4][4] = { {0xD4, 0xE0, 0xB8, 0x1E},
+/*byte matrizTeste[4][4] = { {0xD4, 0xE0, 0xB8, 0x1E},
                            {0xBF, 0xB4, 0x41, 0x27},
                            {0x5D, 0x52, 0x11, 0x98},
                            {0x30, 0xAE, 0xF1, 0xE5} };
@@ -39,7 +39,7 @@ for(int i=0; i < 4; i++)
   }
   Serial.println();
 }
-/*for(int i=0;i<4;i++)
+for(int i=0;i<4;i++)
 {
   for(int j=0;j<4;j++)
   {
@@ -47,7 +47,7 @@ for(int i=0; i < 4; i++)
     Serial.print(L(matrizTeste[i][j]), HEX);
   }
   Serial.println();
-}*/
+}
 delay(60000);
 }
 
@@ -147,4 +147,4 @@ byte tableL(byte linha, byte coluna)
   {0x67, 0x4A, 0xED, 0xDE, 0xC5, 0x31, 0xFE, 0x18, 0x0D, 0x63, 0x8C, 0x80, 0xC0, 0xF7, 0x70, 0x07}
 };
   return tabelaL[linha][coluna];
-}
+}*/

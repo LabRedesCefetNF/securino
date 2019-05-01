@@ -1,4 +1,62 @@
- byte estado[16];
+void enc(byte plainText[][4], byte chave[][4])
+{
+  //PRIMEIRO ROUND
+  AddRoundKey(plainText, chave);
+  Serial.println("After First AddRoundKey: ");
+  imprime(plainText);
+
+  //DEMAIS ROUNDS
+  for(int i=1; i<10; i++)
+  {
+    subBytes(plainText);
+    Serial.println("After SubBytes: ");
+    imprime(plainText);
+    
+    ShiftRows(plainText);
+    Serial.println("After ShitfRows: ");
+    imprime(plainText);
+    
+    MixColumns(plainText);
+    Serial.println("After MixColumns: ");
+    imprime(plainText);
+    
+    KeySchedule(chave);
+    
+    AddRoundKey(plainText, chave);
+    Serial.println("After AddRoundKey: ");
+    imprime(plainText);
+  }
+  //ULTIMO ROUND
+  subBytes(plainText);
+  Serial.println("Last SubBytes: ");
+  imprime(plainText);
+  
+  ShiftRows(plainText);
+  Serial.println("Last ShitfRows: ");
+  imprime(plainText);
+  
+  KeySchedule(chave);
+  
+  AddRoundKey(plainText, chave);
+  Serial.println("Last AddRoundKey: ");
+  imprime(plainText);
+}
+
+void imprime(byte texto[][4])
+{
+  for(int i=0; i < 4; i++)
+  {
+    for(int j=0; j < 4; j++)
+    {
+      Serial.print("\t");
+      Serial.print(texto[i][j], HEX);
+    }
+    Serial.println();
+  }
+  Serial.println();  
+}
+
+/* byte estado[16];
 
 
 void enc(byte data[], byte key[]){
@@ -58,4 +116,4 @@ void setEstado(byte x[]){
 
 byte* getEstado(){
   return estado;
-}
+}*/
