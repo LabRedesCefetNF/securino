@@ -161,4 +161,4 @@ void InvSubBytes(byte *state){
             state[i * 4 + j] = retorna_inv_sbox(state[i * 4 + j]);
         }
     }
-}
+}*/

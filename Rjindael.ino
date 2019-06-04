@@ -2,43 +2,43 @@ void enc(byte plainText[][4], byte chave[][4])
 {
   //PRIMEIRO ROUND
   AddRoundKey(plainText, chave);
-  Serial.println("After First AddRoundKey: ");
+  Serial.println(F("After First AddRoundKey: "));
   imprime(plainText);
 
   //DEMAIS ROUNDS
   for(int i=1; i<10; i++)
   {
     subBytes(plainText);
-    Serial.println("After SubBytes: ");
-    imprime(plainText);
+   Serial.println(F("After SubBytes: "));
+   imprime(plainText);
     
     ShiftRows(plainText);
-    Serial.println("After ShitfRows: ");
+    Serial.println(F("After ShitfRows: "));
     imprime(plainText);
     
     MixColumns(plainText);
-    Serial.println("After MixColumns: ");
-    imprime(plainText);
+   Serial.println(F("After MixColumns: "));
+   imprime(plainText);
     
     KeySchedule(chave);
     
     AddRoundKey(plainText, chave);
-    Serial.println("After AddRoundKey: ");
+    Serial.println(F("After AddRoundKey: "));
     imprime(plainText);
   }
   //ULTIMO ROUND
   subBytes(plainText);
-  Serial.println("Last SubBytes: ");
+  Serial.println(F("Last SubBytes: "));
   imprime(plainText);
   
   ShiftRows(plainText);
-  Serial.println("Last ShiftRows: ");
+  Serial.println(F("Last ShiftRows: "));
   imprime(plainText);
   
-  KeySchedule(chave);
+  //KeySchedule(chave);
   
   AddRoundKey(plainText, chave);
-  Serial.println("Last AddRoundKey: ");
+  Serial.println(F("Last AddRoundKey: "));
   imprime(plainText);
 }
 
@@ -48,7 +48,7 @@ void imprime(byte texto[][4])
   {
     for(int j=0; j < 4; j++)
     {
-      Serial.print("\t");
+      Serial.print(F("\t"));
       Serial.print(texto[i][j], HEX);
     }
     Serial.println();
