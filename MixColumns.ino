@@ -1,4 +1,3 @@
-//função que guarda os valores de cada posição de 0 a F (em hexadecimal) da tabela E
 byte tableE(byte linha, byte coluna)
 {
   byte tabelaE[0x10][0x10] = {
@@ -22,7 +21,6 @@ byte tableE(byte linha, byte coluna)
    return tabelaE[linha][coluna];
 }
 
-//função que guarda os valores de cada posição de 0 a F (em hexadecimal) da tabela L
 byte tableL(byte linha, byte coluna)
 {
   byte tabelaL[0x10][0x10] = {
@@ -45,8 +43,6 @@ byte tableL(byte linha, byte coluna)
   };
   return tabelaL[linha][coluna];
 }
-
-//função para converter um valor hexadecimal para a tabela L
 byte L(byte valor)
 {
    byte linha = 0x0;
@@ -58,7 +54,6 @@ byte L(byte valor)
    return tableL(linha, coluna);
 }
 
-//função para converter um valor hexadecimal para a tabela E
 byte E(byte valor)
 {
    byte linha = 0x0;
@@ -69,7 +64,7 @@ byte E(byte valor)
    return tableE(linha, coluna);
 }
 
-//Aplica a função mix columns
+//F5  6C  6 FE
 void MixColumns(byte matrizEntrada[][4])
 {
    byte aux[4][4];
@@ -90,71 +85,11 @@ void MixColumns(byte matrizEntrada[][4])
   
   for (int i=0; i < 4; i++)
   {
-    matrizEntrada[0][i] = E((L(aux[0][i])+L(matrizGalois[0][0])) % 0xFF) ^ 
-                          E((L(aux[1][i])+L(matrizGalois[0][1])) % 0xFF) ^ 
-                          aux[2][i] ^ 
-                          aux[3][i];
-                          
-    matrizEntrada[1][i] = aux[0][i] ^ 
-                          E((L(aux[1][i])+L(matrizGalois[1][1])) % 0xFF) ^ 
-                          E((L(aux[2][i])+L(matrizGalois[1][2])) % 0xFF) ^ 
-                          aux[3][i];
-                          
-    matrizEntrada[2][i] = aux[0][i] ^ 
-                          aux[1][i] ^ 
-                          E((L(aux[2][i])+L(matrizGalois[2][2])) % 0xFF) ^ 
-                          E((L(aux[3][i])+L(matrizGalois[2][3])) % 0xFF);
-                          
-    matrizEntrada[3][i] = E((L(aux[0][i])+L(matrizGalois[3][0])) % 0xFF) ^ 
-                          aux[1][i] ^ 
-                          aux[2][i] ^ 
-                          E((L(aux[3][i])+L(matrizGalois[3][3])) % 0xFF);
+    matrizEntrada[0][i] = E((L(aux[0][i])+L(matrizGalois[0][0])) % 0xFF) ^ E((L(aux[1][i])+L(matrizGalois[0][1])) % 0xFF) ^ aux[2][i] ^ aux[3][i];
+    matrizEntrada[1][i] = aux[0][i] ^ E((L(aux[1][i])+L(matrizGalois[1][1])) % 0xFF) ^ E((L(aux[2][i])+L(matrizGalois[1][2])) % 0xFF) ^ aux[3][i];
+    matrizEntrada[2][i] = aux[0][i] ^ aux[1][i] ^ E((L(aux[2][i])+L(matrizGalois[2][2])) % 0xFF) ^ E((L(aux[3][i])+L(matrizGalois[2][3])) % 0xFF);
+    matrizEntrada[3][i] = E((L(aux[0][i])+L(matrizGalois[3][0])) % 0xFF) ^ aux[1][i] ^ aux[2][i] ^ E((L(aux[3][i])+L(matrizGalois[3][3])) % 0xFF);
   }
-}
-
-//função da inversa da mix columns
-void MixColumnsInversa(byte matrizResultante[][4])
-{
-  byte aux[4][4];
-  byte matrizGaloisInversa[4][4] = {
-                                    {0x0E, 0x0B, 0x0D, 0x09},
-                                    {0x09, 0x0E, 0x0B, 0x0D},
-                                    {0x0D, 0x09, 0x0E, 0x0B},
-                                    {0x0B, 0x0D, 0x09, 0x0E}
-                                   };
-   for(int i=0; i < 4; i++)
-  {
-    for(int j=0; j < 4; j++)
-    {
-      aux[i][j]=matrizResultante[i][j]; 
-    }
-
-  }
-  
- 
-  for(int i=0; i < 4; i++)
-  {
-    matrizResultante[0][i] = E((L(aux[0][i])+L(matrizGaloisInversa[0][0])) % 0xFF) ^ 
-                             E((L(aux[1][i])+L(matrizGaloisInversa[0][1])) % 0xFF) ^ 
-                             E((L(aux[2][i])+L(matrizGaloisInversa[0][2])) % 0xFF) ^ 
-                             E((L(aux[3][i])+L(matrizGaloisInversa[0][3])) % 0xFF);
-    
-    matrizResultante[1][i] = E((L(aux[0][i])+L(matrizGaloisInversa[1][0])) % 0xFF) ^ 
-                             E((L(aux[1][i])+L(matrizGaloisInversa[1][1])) % 0xFF) ^ 
-                             E((L(aux[2][i])+L(matrizGaloisInversa[1][2])) % 0xFF) ^ 
-                             E((L(aux[3][i])+L(matrizGaloisInversa[1][3])) % 0xFF);
-    
-    matrizResultante[2][i] = E((L(aux[0][i])+L(matrizGaloisInversa[2][0])) % 0xFF) ^ 
-                             E((L(aux[1][i])+L(matrizGaloisInversa[2][1])) % 0xFF) ^ 
-                             E((L(aux[2][i])+L(matrizGaloisInversa[2][2])) % 0xFF) ^
-                             E((L(aux[3][i])+L(matrizGaloisInversa[2][3])) % 0xFF);
-    
-    matrizResultante[3][i] = E((L(aux[0][i])+L(matrizGaloisInversa[3][0])) % 0xFF) ^ 
-                             E((L(aux[1][i])+L(matrizGaloisInversa[3][1])) % 0xFF) ^ 
-                             E((L(aux[2][i])+L(matrizGaloisInversa[3][2])) % 0xFF) ^ 
-                             E((L(aux[3][i])+L(matrizGaloisInversa[3][3])) % 0xFF);
-  }
-
 }
 /*
 //https://forum.arduino.cc/index.php?topic=220385.0
