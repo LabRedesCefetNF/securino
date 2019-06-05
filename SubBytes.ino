@@ -1,8 +1,3 @@
-/*byte* SubBytes(byte state[]){
-  setEstado(rotaciona(state));
-  return getEstado();
-}*/
-
 byte tableS(byte linha, byte coluna)
 {  
   byte  sBox[16][16] = {
@@ -80,6 +75,17 @@ void subBytes(byte state[][4])
     for(int j=0; j<4; j++)
     {
       state[i][j] = sub(state[i][j]);
+    }
+  }
+}
+
+void invSubBytes(byte state[][4])
+{
+  for(int i=0; i<4; i++)
+  {
+    for(int j=0; j<4; j++)
+    {
+      state[i][j] = invSub(state[i][j]);
     }
   }
 }
