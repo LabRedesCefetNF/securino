@@ -14,8 +14,8 @@ byte tableE(byte linha, byte coluna)
     {0x9F, 0xBA, 0xD5, 0x64, 0xAC, 0xEF, 0x2A, 0x7E, 0x82, 0x9D, 0xBC, 0xDF, 0x7A, 0x8E, 0x89, 0x80},
     {0x9B, 0xB6, 0xC1, 0x58, 0xE8, 0x23, 0x65, 0xAF, 0xEA, 0x25, 0x6F, 0xB1, 0xC8, 0x43, 0xC5, 0x54},
     {0xFC, 0x1F, 0x21, 0x63, 0xA5, 0xF4, 0x07, 0x09, 0x1B, 0x2D, 0x77, 0x99, 0xB0, 0xCB, 0x46, 0xCA},
-   {0x45, 0xCF, 0x4A, 0xDE, 0x79, 0x8B, 0x86, 0x91, 0xA8, 0xE3, 0x3E, 0x42, 0xC6, 0x51, 0xF3, 0x0E},
-   {0x12, 0x36, 0x5A, 0xEE, 0x29, 0x7B, 0x8D, 0x8C, 0x8F, 0x8A, 0x85, 0x94, 0xA7, 0xF2, 0x0D, 0x17},
+    {0x45, 0xCF, 0x4A, 0xDE, 0x79, 0x8B, 0x86, 0x91, 0xA8, 0xE3, 0x3E, 0x42, 0xC6, 0x51, 0xF3, 0x0E},
+    {0x12, 0x36, 0x5A, 0xEE, 0x29, 0x7B, 0x8D, 0x8C, 0x8F, 0x8A, 0x85, 0x94, 0xA7, 0xF2, 0x0D, 0x17},
     {0x39, 0x4B, 0xDD, 0x7C, 0x84, 0x97, 0xA2, 0xFD, 0x1C, 0x24, 0x6C, 0xB4, 0xC7, 0x52, 0xF6, 0x01}
   };
    return tabelaE[linha][coluna];
@@ -90,6 +90,50 @@ void MixColumns(byte matrizEntrada[][4])
     matrizEntrada[2][i] = aux[0][i] ^ aux[1][i] ^ E((L(aux[2][i])+L(matrizGalois[2][2])) % 0xFF) ^ E((L(aux[3][i])+L(matrizGalois[2][3])) % 0xFF);
     matrizEntrada[3][i] = E((L(aux[0][i])+L(matrizGalois[3][0])) % 0xFF) ^ aux[1][i] ^ aux[2][i] ^ E((L(aux[3][i])+L(matrizGalois[3][3])) % 0xFF);
   }
+}
+
+void MixColumnsInversa(byte matrizResultante[][4])
+{
+  byte aux[4][4];
+  byte matrizGaloisInversa[4][4] = {
+                                    {0x0E, 0x0B, 0x0D, 0x09},
+                                    {0x09, 0x0E, 0x0B, 0x0D},
+                                    {0x0D, 0x09, 0x0E, 0x0B},
+                                    {0x0B, 0x0D, 0x09, 0x0E}
+                                   };
+   for(int i=0; i < 4; i++)
+  {
+    for(int j=0; j < 4; j++)
+    {
+      aux[i][j]=matrizResultante[i][j]; 
+    }
+
+  }
+  
+ 
+  for(int i=0; i < 4; i++)
+  {
+    matrizResultante[0][i] = E((L(aux[0][i])+L(matrizGaloisInversa[0][0])) % 0xFF) ^ 
+                             E((L(aux[1][i])+L(matrizGaloisInversa[0][1])) % 0xFF) ^ 
+                             E((L(aux[2][i])+L(matrizGaloisInversa[0][2])) % 0xFF) ^ 
+                             E((L(aux[3][i])+L(matrizGaloisInversa[0][3])) % 0xFF);
+    
+    matrizResultante[1][i] = E((L(aux[0][i])+L(matrizGaloisInversa[1][0])) % 0xFF) ^ 
+                             E((L(aux[1][i])+L(matrizGaloisInversa[1][1])) % 0xFF) ^ 
+                             E((L(aux[2][i])+L(matrizGaloisInversa[1][2])) % 0xFF) ^ 
+                             E((L(aux[3][i])+L(matrizGaloisInversa[1][3])) % 0xFF);
+    
+    matrizResultante[2][i] = E((L(aux[0][i])+L(matrizGaloisInversa[2][0])) % 0xFF) ^ 
+                             E((L(aux[1][i])+L(matrizGaloisInversa[2][1])) % 0xFF) ^ 
+                             E((L(aux[2][i])+L(matrizGaloisInversa[2][2])) % 0xFF) ^
+                             E((L(aux[3][i])+L(matrizGaloisInversa[2][3])) % 0xFF);
+    
+    matrizResultante[3][i] = E((L(aux[0][i])+L(matrizGaloisInversa[3][0])) % 0xFF) ^ 
+                             E((L(aux[1][i])+L(matrizGaloisInversa[3][1])) % 0xFF) ^ 
+                             E((L(aux[2][i])+L(matrizGaloisInversa[3][2])) % 0xFF) ^ 
+                             E((L(aux[3][i])+L(matrizGaloisInversa[3][3])) % 0xFF);
+  }
+
 }
 /*
 //https://forum.arduino.cc/index.php?topic=220385.0
