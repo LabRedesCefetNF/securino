@@ -20,7 +20,7 @@ void enc(byte plainText[][4], byte chave[][4])
     Serial.println("After MixColumns: ");
     imprime(plainText);
     
-    KeySchedule(chave);
+    KeySchedule(chave, i);
     
     AddRoundKey(plainText, chave);
     Serial.println("After AddRoundKey: ");
@@ -35,7 +35,7 @@ void enc(byte plainText[][4], byte chave[][4])
   Serial.println("Last ShiftRows: ");
   imprime(plainText);
   
-  KeySchedule(chave);
+  KeySchedule(chave, 10);
   
   AddRoundKey(plainText, chave);
   Serial.println("Last AddRoundKey: ");
