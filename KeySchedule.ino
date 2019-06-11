@@ -25,17 +25,7 @@ void KeySchedule(byte chave[][4], int round){
 
   for(int i=0; i<4; i++){
     copia[i] = sub(copia[i]);
-  }
-  
-  /*if(round == 1){
-     for(int i=0; i<4; i++){
-      if(i==0){
-        matrizcopia[i][0] = chave[i][0] ^ copia[i] ^ 0x01;  
-      }else{
-        matrizcopia[i][0] = chave[i][0] ^ copia[i] ^ 0x00;
-      }
-  }  
-  }*/
+  }   
   
    if(round < 9){
     for(int i=0; i<4; i++){
