@@ -36,7 +36,8 @@ void loop() {
   }
   Serial.println();
 
-  enc(plaintext,key);
+//  enc(plaintext,key);
+dec(plaintext,key);
 
   Serial.println("Output: ");
   for(int i=0; i < 4; i++)
