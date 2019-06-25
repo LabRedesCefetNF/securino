@@ -84,14 +84,25 @@ void subBytes(byte state[][4])
   }
 }
 
-byte SubBytesKey(byte chave[]){
+void InvSubBytes(byte state[][4])
+{
+  for(int i=0; i<4; i++)
+  {
+    for(int j=0; j<4; j++)
+    {
+      state[i][j] = invSub(state[i][j]);
+    }
+  }
+}
+
+void SubBytesKey(byte chave[]){
   int linha, coluna;
   coluna = 0;
         for (linha = 0; linha < 4; linha++) {
             chave[linha] = sub(chave[linha]);
         }
 
-        return chave;
+        //return chave;
 }
 
 /*static const byte sbox[256] {*/

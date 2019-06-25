@@ -1,13 +1,27 @@
-void InvKeySchedule(byte chave[][4], int round){  
+void InvKeySchedule(byte chave[][4], int rodada){  
+  
+  for(int i=0; i<4; i++){
+    for(int j=0; j<4; j++){
+      chave[i][j] = keyCopia[i][j];
+    }
+  }
+      
+  for(int i=1; i<=rodada; i++)
+  {
+      KeySchedule(chave, i);
+  }
 
-  if(round==0){
+  
+  /*
+  
+  if(rodada==0){
     setOriginalKey(chave);
   }else{
     getOriginalKey(chave);  
   }
   
-  int roundInv = 10-round;
-  if(round<10){
+  int roundInv = 10-rodada;
+  if(rodada<10){
       for(int i=1;i<=roundInv;i++){
       KeySchedule(chave, i);  
     }
@@ -32,4 +46,5 @@ void getOriginalKey(byte chave[][4]){
       chave[i][j] = originalKey[i][j];
     }
   }
+*/
 }

@@ -1,54 +1,101 @@
-void dec(byte cipherText[][4], byte chave[][4])
-{
-  //PRIMEIRO ROUND
-  InvKeySchedule(chave,0);
+void dec(byte plainText[][4], byte chave[][4])
 
-  
- /* AddRoundKey(cipherText, chave);
+{
+
+  //PRIMEIRO ROUND
+
+  InvKeySchedule(chave, 10);
+
+  AddRoundKey(plainText, chave);
+
   Serial.println("After First AddRoundKey: ");
-  */
-  InvImprime(chave);
+
+  imprime(plainText);
+  
+  Serial.println("Chave: ");
+  
+  imprime(chave);
+
+
 
   //DEMAIS ROUNDS
-  for(int i=1; i<10; i++)
-  {
-/* //  subBytes(plainText);
-    Serial.println("After SubBytes: ");
-  ///  imprime(plainText);
-    
- //   ShiftRows(plainText);
-    Serial.println("After ShitfRows: ");
-  //  imprime(plainText);
-    
-    MixColumns(plainText);
-    Serial.println("After MixColumns: ");
+
+  for(int i=9; i>=1; i--)
+
+  {  
+
+    invShiftRows(plainText);
+
+    Serial.println("After InvShitfRows: ");
+
     imprime(plainText);
- */   
+
+
+
+    InvSubBytes(plainText);
+
+    Serial.println("After InvSubBytes: ");
+
+    imprime(plainText);
+
+    
+
     InvKeySchedule(chave, i);
-    InvImprime(chave);
+
     
-   /* 
+
     AddRoundKey(plainText, chave);
+
     Serial.println("After AddRoundKey: ");
+
     imprime(plainText);
-    */
+
+
+
+    MixColumnsInversa(plainText);
+
+    Serial.println("After InvMixColumns: ");
+
+    imprime(plainText);
+    
+    Serial.println("Chave: ");
+  
+    imprime(chave);
+
   }
+
   //ULTIMO ROUND
-/*  subBytes(plainText);
-  Serial.println("Last SubBytes: ");
-  imprime(plainText);
+
+    invShiftRows(plainText);
+
+    Serial.println("After Last InvShitfRows: ");
+
+    imprime(plainText);
+
+
+
+    InvSubBytes(plainText);
+
+    Serial.println("After Last InvSubBytes: ");
+
+    imprime(plainText);
+
+    
+
+    InvKeySchedule(chave, 0);
+
+    
+
+    AddRoundKey(plainText, chave);
+
+    Serial.println("After Last AddRoundKey: ");
+
+    imprime(plainText);
+    
+    Serial.println("Chave: ");
   
-  ShiftRows(plainText);
-  Serial.println("Last ShiftRows: ");
-  imprime(plainText);*/
-  
-  InvKeySchedule(chave, 10);
-    InvImprime(chave);
-  
-/*  AddRoundKey(plainText, chave);
-  Serial.println("Last AddRoundKey: ");
-  imprime(plainText);
-  */
+    imprime(chave);
+
 }
 
 void InvImprime(byte texto[][4])
