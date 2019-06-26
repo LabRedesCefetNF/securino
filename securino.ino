@@ -1,21 +1,22 @@
-byte plaintext[4][4] = {
-                        /*{0x00,0x44,0x88,0xcc},
-                        {0x11,0x55,0x99,0xdd},
-                        {0x22,0x66,0xaa,0xee},
-                        {0x33,0x77,0xbb,0xff}*/
-                        {0x69, 0x6a, 0xd8, 0x70},
-                        {0xc4,0x7b, 0xcd, 0xb4},
-                        {0xe0, 0x04, 0xb7, 0xc5},
-                        {0xd8, 0x30, 0x80, 0x5a}
-                       };                       
+/*
+//Appendix C – Example Vectors C.1 AES-128 (Nk=4, Nr=10) - Page 35 - FIPS 197
+//byte data[16] = {0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xaa,0xbb,0xcc,0xdd,0xee,0xff};
+//byte key128[16]  = {0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f};          
 
-byte key[4][4] = {
-                  {0x00,0x04,0x08,0x0c},
-                  {0x01,0x05,0x09,0x0d},
-                  {0x02,0x06,0x0a,0x0e},
-                  {0x03,0x07,0x0b,0x0f}
-                 };
-                 
+//Decript
+//Appendix C – Example Vectors C.1 AES-128 (Nk=4, Nr=10) - Page 36 - FIPS 197
+//byte dataInput[16] = {0x69,0xc4,0xe0,0xd8,0x6a,0x7b,0x04,0x30,0xd8,0xcd,0xb7,0x80,0x70,0xb4,0xc5,0x5a};
+//byte keyInput[16]  = {0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f};          
+
+
+//Appendix B – Cipher Example - Page 37 - FIPS 197
+data = {0x32,0x43,0xf6,0xa8,0x88,0x5a,0x30,0x8d,0x31,0x31,0x98,0xa2,0xe0,0x37,0x07,0x34};
+key  = {0x2b,0x7e,0x15,0x16,0x28,0xae,0xd2,0xa6,0xab,0xf7,0x15,0x88,0x09,0xcf,0x4f,0x3c};
+*/
+
+//byte data[16],key128[16];
+byte plaintext[4][4];
+byte key[4][4] ;                 
 const byte keyCopia[4][4] = {
                              {0x00,0x04,0x08,0x0c},
                              {0x01,0x05,0x09,0x0d},
@@ -27,6 +28,8 @@ const byte keyCopia[4][4] = {
 void enc(byte x[][4], byte y[][4]); 
 void dec(byte x[][4], byte y[][4]);
 // the setup routine runs once when you press reset:
+
+
 void setup() {                
   // initialize the digital pin as an output.
   Serial.begin(9600);     
@@ -35,58 +38,74 @@ void setup() {
 
 // the loop routine runs over and over again forever:
 void loop() {
-
   delay(3000);
-  Serial.println("State: ");
+  byte texto[] = {0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xaa,0xbb,0xcc,0xdd,0xee,0xff};
+  byte chave[] = {0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f};
 
-  for(int i=0; i < 4; i++)
-  {
-    for(int j=0; j < 4; j++)
-    {
-      Serial.print("\t");
-      Serial.print(plaintext[i][j], HEX);
-    }
-    Serial.println();
-  }
-  Serial.println();
+  setKey(chave);
+  setData(texto);
+  show("Chave: \t\t",chave);
+  show("PlainText:\t",texto);
+  encaes128ecb();
+  show("CipherText:\t",getData());
 
-//enc(plaintext,key);
-dec(plaintext,key);
-
-  Serial.println("Output: ");
-  for(int i=0; i < 4; i++)
-  {
-    for(int j=0; j < 4; j++)
-    {
-      Serial.print("\t");
-      Serial.print(plaintext[i][j], HEX);
-    }
-    Serial.println();
-  }
+  decaes128ecb(); 
+  show("PlainText:\t",getData());
   delay(5000000);
 }
 
-/*byte plaintext[16] = {0x32,0x43,0xF6,0xA8,0x88,0x5A,0x30,0x8D,0x31,0x31,0x98,0xA2,0xE0,0x37,0x07,0x34};
-byte key[16] = {0x2B,0x7E,0x15,0x16,0x28,0xAE,0xD2,0xA6,0xAB,0xF7,0x15,0x88,0x09,0xCF,0x4F,0x3C};
 
 
-// the setup routine runs once when you press reset:
-void setup() {                
-  // initialize the digital pin as an output.
-      Serial.begin(9600);     
-      
+void encaes128ecb(){
+  enc(plaintext,key);
 }
 
-// the loop routine runs over and over again forever:
-void loop() {
+void decaes128ecb(){
+  dec(plaintext,key);
+}
 
- delay(3000);
- 
+void setKey(byte x[16]){
+  int veti = 0;
+  //De vetor[16] para matris[4][4]
+  for(int j=0; j < 4; j++){
+    for(int i=0; i < 4; i++){
+      key[i][j] = x[veti];
+      veti++;
+    }
+  }
+}
 
-enc(plaintext,key);
+void setData(byte x[16]){
+  int veti = 0;
+  //De vetor[16] para matris[4][4]
+  for(int j=0; j < 4; j++){
+    for(int i=0; i < 4; i++){
+      plaintext[i][j] = x[veti];
+      veti++;
+    }
+  }
+}
 
 
+byte *getData(){
+  static byte xxy[16];
+  int veti = 0;
+  //De vetor[16] para matris[4][4]
+  for(int j=0; j < 4; j++){
+    for(int i=0; i < 4; i++){
+      xxy[veti] = plaintext[i][j];
+      veti++;
+    }
+  }
+  return xxy;
+}
 
-delay(5000000);
-
-}*/
+void show(String a, byte vet[]){
+  Serial.print(a);  
+  for(int i=0; i < 16; i++)
+  {
+      Serial.print(vet[i], HEX);
+      Serial.print(" ");  
+  }
+  Serial.println();  
+}
