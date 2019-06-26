@@ -28,7 +28,7 @@ byte tableL(byte linha, byte coluna)
 {
   byte tabelaL[0x10][0x10] = {
           /* 0     1     2     3     4     5     6     7     8     9     A     B     C     D     E     F  */
-/*0 */    {0x00, 0x00, 0x19, 0x01, 0x32, 0x02, 0x1A, 0xC6, 0x4B, 0xC7, 0x1B, 0x68, 0x33, 0xEE, 0xDF, 0x03},
+/*0 */    {NULL, 0x00, 0x19, 0x01, 0x32, 0x02, 0x1A, 0xC6, 0x4B, 0xC7, 0x1B, 0x68, 0x33, 0xEE, 0xDF, 0x03},
 /*1 */    {0x64, 0x04, 0xE0, 0x0E, 0x34, 0x8D, 0x81, 0xEF, 0x4C, 0x71, 0x08, 0xC8, 0xF8, 0x69, 0x1C, 0xC1},
 /*2 */    {0x7D, 0xC2, 0x1D, 0xB5, 0xF9, 0xB9, 0x27, 0x6A, 0x4D, 0xE4, 0xA6, 0x72, 0x9A, 0xC9, 0x09, 0x78},
 /*3 */    {0x65, 0x2F, 0x8A, 0x05, 0x21, 0x0F, 0xE1, 0x24, 0x12, 0xF0, 0x82, 0x45, 0x35, 0x93, 0xDA, 0x8E},
@@ -71,6 +71,24 @@ byte E(byte valor)
    return tableE(linha, coluna);
 }
 
+byte calculaLE(byte valor1, byte valor2)
+{
+ byte soma =0x00;
+ byte resultado = 0x00;
+ if(valor1 == 0x00)
+ {
+   resultado =  0x00;
+ }
+ else
+ {
+   soma = (L(valor1)+L(valor2))%0xFF;
+   resultado = E(soma); 
+ }
+ 
+ return resultado;
+  
+}
+
 //Aplica a função mix columns
 void MixColumns(byte matrizEntrada[][4])
 {
@@ -92,25 +110,25 @@ void MixColumns(byte matrizEntrada[][4])
   
   for (int i=0; i < 4; i++)
   {
-    matrizEntrada[0][i] = E((L(aux[0][i])+L(matrizGalois[0][0])) % 0xFF) ^ 
-                          E((L(aux[1][i])+L(matrizGalois[0][1])) % 0xFF) ^ 
+    matrizEntrada[0][i] = calculaLE(aux[0][i], matrizGalois[0][0]) ^ 
+                          calculaLE(aux[1][i], matrizGalois[0][1]) ^ 
                           aux[2][i] ^ 
                           aux[3][i];
                           
     matrizEntrada[1][i] = aux[0][i] ^ 
-                          E((L(aux[1][i])+L(matrizGalois[1][1])) % 0xFF) ^ 
-                          E((L(aux[2][i])+L(matrizGalois[1][2])) % 0xFF) ^ 
+                          calculaLE(aux[1][i], matrizGalois[1][1]) ^ 
+                          calculaLE(aux[2][i], matrizGalois[1][2]) ^ 
                           aux[3][i];
                           
     matrizEntrada[2][i] = aux[0][i] ^ 
                           aux[1][i] ^ 
-                          E((L(aux[2][i])+L(matrizGalois[2][2])) % 0xFF) ^ 
-                          E((L(aux[3][i])+L(matrizGalois[2][3])) % 0xFF);
+                          calculaLE(aux[2][i], matrizGalois[2][2]) ^ 
+                          calculaLE(aux[3][i], matrizGalois[2][3]);
                           
-    matrizEntrada[3][i] = E((L(aux[0][i])+L(matrizGalois[3][0])) % 0xFF) ^ 
+    matrizEntrada[3][i] = calculaLE(aux[0][i], matrizGalois[3][0]) ^ 
                           aux[1][i] ^ 
                           aux[2][i] ^ 
-                          E((L(aux[3][i])+L(matrizGalois[3][3])) % 0xFF);
+                          calculaLE(aux[3][i], matrizGalois[3][3]);
   }
 }
 
@@ -136,25 +154,25 @@ void MixColumnsInversa(byte matrizResultante[][4])
  
   for(int i=0; i < 4; i++)
   {
-    matrizResultante[0][i] = E((L(aux[0][i])+L(matrizGaloisInversa[0][0])) % 0xFF) ^ 
-                             E((L(aux[1][i])+L(matrizGaloisInversa[0][1])) % 0xFF) ^ 
-                             E((L(aux[2][i])+L(matrizGaloisInversa[0][2])) % 0xFF) ^ 
-                             E((L(aux[3][i])+L(matrizGaloisInversa[0][3])) % 0xFF);
+    matrizResultante[0][i] = calculaLE(aux[0][i], matrizGaloisInversa[0][0]) ^ 
+                             calculaLE(aux[1][i], matrizGaloisInversa[0][1]) ^ 
+                             calculaLE(aux[2][i], matrizGaloisInversa[0][2]) ^ 
+                             calculaLE(aux[3][i], matrizGaloisInversa[0][3]);
     
-    matrizResultante[1][i] = E((L(aux[0][i])+L(matrizGaloisInversa[1][0])) % 0xFF) ^ 
-                             E((L(aux[1][i])+L(matrizGaloisInversa[1][1])) % 0xFF) ^ 
-                             E((L(aux[2][i])+L(matrizGaloisInversa[1][2])) % 0xFF) ^ 
-                             E((L(aux[3][i])+L(matrizGaloisInversa[1][3])) % 0xFF);
+    matrizResultante[1][i] = calculaLE(aux[0][i], matrizGaloisInversa[1][0]) ^ 
+                             calculaLE(aux[1][i], matrizGaloisInversa[1][1]) ^ 
+                             calculaLE(aux[2][i], matrizGaloisInversa[1][2]) ^ 
+                             calculaLE(aux[3][i], matrizGaloisInversa[1][3]);
     
-    matrizResultante[2][i] = E((L(aux[0][i])+L(matrizGaloisInversa[2][0])) % 0xFF) ^ 
-                             E((L(aux[1][i])+L(matrizGaloisInversa[2][1])) % 0xFF) ^ 
-                             E((L(aux[2][i])+L(matrizGaloisInversa[2][2])) % 0xFF) ^
-                             E((L(aux[3][i])+L(matrizGaloisInversa[2][3])) % 0xFF);
+    matrizResultante[2][i] = calculaLE(aux[0][i], matrizGaloisInversa[2][0]) ^ 
+                             calculaLE(aux[1][i], matrizGaloisInversa[2][1]) ^ 
+                             calculaLE(aux[2][i], matrizGaloisInversa[2][2]) ^ 
+                             calculaLE(aux[3][i], matrizGaloisInversa[2][3]);
     
-    matrizResultante[3][i] = E((L(aux[0][i])+L(matrizGaloisInversa[3][0])) % 0xFF) ^ 
-                             E((L(aux[1][i])+L(matrizGaloisInversa[3][1])) % 0xFF) ^ 
-                             E((L(aux[2][i])+L(matrizGaloisInversa[3][2])) % 0xFF) ^ 
-                             E((L(aux[3][i])+L(matrizGaloisInversa[3][3])) % 0xFF);
+    matrizResultante[3][i] = calculaLE(aux[0][i], matrizGaloisInversa[3][0]) ^ 
+                             calculaLE(aux[1][i], matrizGaloisInversa[3][1]) ^ 
+                             calculaLE(aux[2][i], matrizGaloisInversa[3][2]) ^ 
+                             calculaLE(aux[3][i], matrizGaloisInversa[3][3]);
   }
 
 }
