@@ -1,11 +1,11 @@
 /*
-  Javino.h - Library communication for Arduino and Jason.
-Version Stable 1.1
-  Created by Lazarin, NM and Pantoja, CE - January 29, 2015.
-    nilson.lazarin@cefet-rj.br
-	carlos.pantoja@cefet-rj.br
-
-  Updated in 2015-06-21
+  Securino.h - Security Library for Arduino.
+    Version 1.0.0
+  Created by  
+        Rocha, IF
+        Verly, PFS
+        Schott, RI
+        Lazarin, NM   nilson.lazarin@cefet-rj.br
   Released into the public domain.
 
 */
