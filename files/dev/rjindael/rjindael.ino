@@ -15,13 +15,14 @@ key  = {0x2b,0x7e,0x15,0x16,0x28,0xae,0xd2,0xa6,0xab,0xf7,0x15,0x88,0x09,0xcf,0x
 */
 void setup() {                
   // initialize the digital pin as an output.
-  Serial.begin(9600);     
+  Serial.begin(9600);  
       
 }
 
 // the loop routine runs over and over again forever:
 void loop() {
-  delay(3000);
+  randomSeed(analogRead(0));
+  delay(3300);
 //  byte texto[] = {0x32,0x43,0xf6,0xa8,0x88,0x5a,0x30,0x8d,0x31,0x31,0x98,0xa2,0xe0,0x37,0x07,0x34};
 //  byte chave[] = {0x2b,0x7e,0x15,0x16,0x28,0xae,0xd2,0xa6,0xab,0xf7,0x15,0x88,0x09,0xcf,0x4f,0x3c};
 
@@ -29,11 +30,12 @@ void loop() {
   byte chave[]  = {0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f};   
   byte cifrado[]={0x69,0xc4,0xe0,0xd8,0x6a,0x7b,0x04,0x30,0xd8,0xcd,0xb7,0x80,0x70,0xb4,0xc5,0x5a};
 
- 
-  show("CipherText:\t",encript("aes-128-ecb",texto,chave));
-  show("PlainText:\t",decript("aes-128-ecb",cifrado,chave));
+  show("PlainText: \t", texto);
+  show("Chave: \t", chave); 
+  show("CipherText:\t", " ", encript("aes-128-cbc",texto,chave));
+  show("Decifrado:\t",decript("aes-128-cbc",encript("aes-128-cbc",texto,chave),chave));
 
-  delay(5000000);
+  delay(3000);
 }
 
 void show(String a, byte vet[]){
@@ -46,28 +48,85 @@ void show(String a, byte vet[]){
   Serial.println();  
 }
 
+void show(String a, String b, byte vet[]){
+  Serial.print(a);  
+  for(int i=0; i < 32; i++)
+  {
+      Serial.print(vet[i], HEX);
+      Serial.print(" ");  
+  }
+  Serial.println();  
+}
+
 //-------------- Variaveis Globais------------------------------
 byte plaintext[4][4];
 byte key[4][4];                 
 byte keyCopia[4][4];
 
+
 //--------------Funcoes Públicas -------------------------------
-byte *encript(String operacao, byte in[16], byte k[16] ){
+byte *encript(String operacao, byte in[], byte k[] ){
   setKey(k);
-  setData(in);
+  
   if(operacao=="aes-128-ecb"){
-    encAES128ecb(plaintext,key);
-  }  
-  return getData();
+    
+    setData(in);
+    encAES128(plaintext,key);
+    
+    return getData();
+    
+  }
+  if(operacao=="aes-128-cbc"){
+    
+    byte IV[16];
+   
+    byte auxin[16];
+    geraVetorInicializacao(IV);
+     show("IV: ",IV);
+    // continuar daqui...
+    for(byte i=0x00; i<0x10; i++){
+      auxin[i] = in[i] ^ IV[i];
+    }
+    
+    
+    setData(auxin);
+    //setData(in);
+    encAES128(plaintext, key);
+    
+    return getDataCBC(IV);
+    
+  }
+  
 }
 
-byte *decript(String operacao, byte in[16], byte k[16] ){
+byte *decript(String operacao, byte in[], byte k[] ){
   setKey(k);
-  setData(in);
+  
   if(operacao=="aes-128-ecb"){
-    decAES128ecb(plaintext,key);
-  }  
-  return getData();
+    setData(in);
+    return getData();
+    decAES128(plaintext,key);
+  }else if(operacao=="aes-128-cbc"){
+    byte state[16];
+    byte auxIV[16];
+
+    split(state,auxIV, in);
+    Serial.println(" ");
+    
+    setData(state);
+    
+    decAES128(plaintext, key);
+     int veti = 0;
+  //De vetor[16] para matris[4][4]
+  for(int j=0; j < 4; j++){
+    for(int i=0; i < 4; i++){
+      plaintext[i][j] = plaintext[i][j] ^ auxIV[veti];
+      veti++;
+    }
+  }
+   
+   return getData();
+  }   
 }
 
 //--------------Funcoes Privadas -------------------------------
@@ -97,7 +156,7 @@ void setData(byte x[16]){
 byte *getData(){
   static byte xxy[16];
   int veti = 0;
-  //De vetor[16] para matris[4][4]
+  //De  matris[4][4] para vetor[16]
   for(int j=0; j < 4; j++){
     for(int i=0; i < 4; i++){
       xxy[veti] = plaintext[i][j];
@@ -107,7 +166,26 @@ byte *getData(){
   return xxy;
 }
 
-void encAES128ecb(byte plainText[][4], byte chave[][4]){
+byte *getDataCBC(byte randKey[]){
+  
+  static byte xyy[32];
+  int veti=0;
+    for(byte i=0x00; i<0x10; i++){
+      xyy[i] = randKey[i];
+    }
+    
+    for(int j=0; j < 4; j++){
+    for(int i=0; i < 4; i++){
+      xyy[veti+16] = plaintext[i][j];
+      veti++;
+    }
+  }
+  
+  return xyy;
+
+}
+
+void encAES128(byte plainText[][4], byte chave[][4]){
   AddRoundKey(plainText, chave);
   for(int i=1; i<10; i++){
     subBytes(plainText);
@@ -122,7 +200,7 @@ void encAES128ecb(byte plainText[][4], byte chave[][4]){
   AddRoundKey(plainText, chave);
 }
 
-void decAES128ecb(byte plainText[][4], byte chave[][4]){
+void decAES128(byte plainText[][4], byte chave[][4]){
   InvKeySchedule(chave, 10);
   AddRoundKey(plainText, chave);
   for(int i=9; i>=1; i--){  
@@ -546,5 +624,20 @@ void InvKeySchedule(byte chave[][4], int rodada){
   for(int i=1; i<=rodada; i++)
   {
       KeySchedule(chave, i);
+  }
+}
+
+void geraVetorInicializacao(byte ivRandom[])
+{
+    for(byte i=0x00; i<0x10; i++)
+    {
+        ivRandom[i] = random(0x00, 0xFF);
+    }
+}
+
+void split(byte state[], byte iv[], byte stateIV[]){
+  for(int i=0; i<16; i++){
+    iv[i] = stateIV[i];
+    state[i] = stateIV[i+16];
   }
 }
